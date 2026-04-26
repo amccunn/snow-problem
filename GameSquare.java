@@ -7,8 +7,9 @@ public class GameSquare extends JButton
     private int xCord;
     private int yCord;
 
-    public GameSquare(ImageIcon imageName, String name, int x, int y)
+    public GameSquare(String name, int x, int y)
     {
+        ImageIcon imageName = new ImageIcon(name + ".png");
         super(imageName);
         this.squareName = name;
         this.xCord = x;

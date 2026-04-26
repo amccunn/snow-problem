@@ -22,8 +22,7 @@ public class GameBoard implements ActionListener
             for (int j = 0; j < gameBoardWidth; j++)
             {
                 String hole = "hole"; 
-                ImageIcon holeIcon = new ImageIcon(hole + ".png");
-                this.addItem(j, i, holeIcon, hole);
+                squaresArray[i][j] = new GameSquare(hole, j, i);
                 boardPanel.add(squaresArray[i][j]);
                 squaresArray[i][j].addActionListener(this);
             }
@@ -36,10 +35,11 @@ public class GameBoard implements ActionListener
         boardFrame.setVisible(true);
     }
 
-    public void addItem(int x, int y, ImageIcon iconName, String name)
+    public GameSquare[][] getSquaresArray()
     {
-        squaresArray[y][x] = new GameSquare(iconName, name, x, y);
+        return squaresArray;
     }
+    
 
     public void actionPerformed(ActionEvent e)
     {
