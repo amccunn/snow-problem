@@ -1,66 +1,58 @@
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.*;
 
-public class GameBoard
+public class GameBoard implements ActionListener
 {
     private JFrame boardFrame = new JFrame();
     private JPanel boardPanel = new JPanel();
-    private GridLayout boardLayout = new GridLayout(4, 5);
+    private int gameBoardWidth = 5;
+    private int gameBoardHeight = 4;
+    private GridLayout boardLayout = new GridLayout(gameBoardHeight, gameBoardWidth);
 
-    private GameSquare square00 = new GameSquare("hole");
-    private GameSquare square01 = new GameSquare("hole");
-    private GameSquare square02 = new GameSquare("hole");
-    private GameSquare square03 = new GameSquare("hole");
-    private GameSquare square04 = new GameSquare("hole");
-    private GameSquare square10 = new GameSquare("hole");
-    private GameSquare square11 = new GameSquare("hole");
-    private GameSquare square12 = new GameSquare("hole");
-    private GameSquare square13 = new GameSquare("hole");
-    private GameSquare square14 = new GameSquare("hole");
-    private GameSquare square20 = new GameSquare("hole");
-    private GameSquare square21 = new GameSquare("hole");
-    private GameSquare square22 = new GameSquare("hole");
-    private GameSquare square23 = new GameSquare("hole");
-    private GameSquare square24 = new GameSquare("hole");
-    private GameSquare square30 = new GameSquare("hole");
-    private GameSquare square31 = new GameSquare("hole");
-    private GameSquare square32 = new GameSquare("hole");
-    private GameSquare square33 = new GameSquare("hole");
-    private GameSquare square34 = new GameSquare("hole");
-
-
-
+    private GameSquare[][] squaresArray = new GameSquare[gameBoardHeight][gameBoardWidth];
 
     public GameBoard()
     {
         boardPanel.setLayout(boardLayout);
 
-        boardPanel.add(square00);
-        boardPanel.add(square01);
-        boardPanel.add(square02);
-        boardPanel.add(square03);
-        boardPanel.add(square04);
-        boardPanel.add(square10);
-        boardPanel.add(square11);
-        boardPanel.add(square12);
-        boardPanel.add(square13);
-        boardPanel.add(square14);
-        boardPanel.add(square20);
-        boardPanel.add(square21);
-        boardPanel.add(square22);
-        boardPanel.add(square23);
-        boardPanel.add(square24);
-        boardPanel.add(square30);
-        boardPanel.add(square31);
-        boardPanel.add(square32);
-        boardPanel.add(square33);
-        boardPanel.add(square34);
+        for (int i = 0; i < gameBoardHeight; i++)
+        {
+            for (int j = 0; j < gameBoardWidth; j++)
+            {
+                String hole = "hole"; 
+                ImageIcon holeIcon = new ImageIcon(hole + ".png");
+                this.addItem(j, i, holeIcon, hole);
+                boardPanel.add(squaresArray[i][j]);
+                squaresArray[i][j].addActionListener(this);
+            }
+        }
 
         boardFrame.setContentPane(boardPanel);
         boardFrame.setTitle("Snow Game");
         boardFrame.setSize(800, 640);
         boardFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         boardFrame.setVisible(true);
+    }
+
+    public void addItem(int x, int y, ImageIcon iconName, String name)
+    {
+        squaresArray[y][x] = new GameSquare(iconName, name, x, y);
+    }
+
+    public void actionPerformed(ActionEvent e)
+    {
+        for (int i = 0; i < gameBoardHeight; i++)
+        {
+            for (int j = 0; j < gameBoardWidth; j++)
+            {
+                if (e.getSource() == squaresArray[i][j])
+                {
+                    
+                }
+            }
+        }
     }
 
 }

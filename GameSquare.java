@@ -3,23 +3,26 @@ import javax.swing.*;
 
 public class GameSquare extends JButton
 {
-    private String squareType;
+    private String squareName;
+    private int xCord;
+    private int yCord;
 
-    public GameSquare(String type)
+    public GameSquare(ImageIcon imageName, String name, int x, int y)
     {
-        ImageIcon typeAsImage = new ImageIcon(type + ".png");
-        super(typeAsImage);
-        squareType = type;
-    }
-
-    public void setSquareType(String newType)
-    {
-        squareType = newType;
-    }
-
-    public String getSquareType()
-    {
-        return squareType;
+        super(imageName);
+        this.squareName = name;
+        this.xCord = x;
+        this.yCord = y;
     }
     
+    public String getName()
+    {
+        return squareName;
+    }
+
+    public int[] getCords()
+    {
+        int[] cords = {xCord, yCord};
+        return cords;
+    }
 }
