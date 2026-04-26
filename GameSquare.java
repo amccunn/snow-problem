@@ -7,7 +7,8 @@ public class GameSquare extends JButton
 
     public GameSquare(String type)
     {
-        super(type + ".png")
+        ImageIcon typeAsImage = new ImageIcon(type + ".png");
+        super(typeAsImage);
         squareType = type;
     }
 

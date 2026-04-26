@@ -7,26 +7,26 @@ public class GameBoard
     private JPanel boardPanel = new JPanel();
     private GridLayout boardLayout = new GridLayout(4, 5);
 
-    private GameSquare square00 = new GameSquare("blank");
-    private GameSquare square01 = new GameSquare("blank");
-    private GameSquare square02 = new GameSquare("blank");
-    private GameSquare square03 = new GameSquare("blank");
-    private GameSquare square04 = new GameSquare("blank");
-    private GameSquare square10 = new GameSquare("blank");
-    private GameSquare square11 = new GameSquare("blank");
-    private GameSquare square12 = new GameSquare("blank");
-    private GameSquare square13 = new GameSquare("blank");
-    private GameSquare square14 = new GameSquare("blank");
-    private GameSquare square20 = new GameSquare("blank");
-    private GameSquare square21 = new GameSquare("blank");
-    private GameSquare square22 = new GameSquare("blank");
-    private GameSquare square23 = new GameSquare("blank");
-    private GameSquare square24 = new GameSquare("blank");
-    private GameSquare square30 = new GameSquare("blank");
-    private GameSquare square31 = new GameSquare("blank");
-    private GameSquare square32 = new GameSquare("blank");
-    private GameSquare square33 = new GameSquare("blank");
-    private GameSquare square34 = new GameSquare("blank");
+    private GameSquare square00 = new GameSquare("hole");
+    private GameSquare square01 = new GameSquare("hole");
+    private GameSquare square02 = new GameSquare("hole");
+    private GameSquare square03 = new GameSquare("hole");
+    private GameSquare square04 = new GameSquare("hole");
+    private GameSquare square10 = new GameSquare("hole");
+    private GameSquare square11 = new GameSquare("hole");
+    private GameSquare square12 = new GameSquare("hole");
+    private GameSquare square13 = new GameSquare("hole");
+    private GameSquare square14 = new GameSquare("hole");
+    private GameSquare square20 = new GameSquare("hole");
+    private GameSquare square21 = new GameSquare("hole");
+    private GameSquare square22 = new GameSquare("hole");
+    private GameSquare square23 = new GameSquare("hole");
+    private GameSquare square24 = new GameSquare("hole");
+    private GameSquare square30 = new GameSquare("hole");
+    private GameSquare square31 = new GameSquare("hole");
+    private GameSquare square32 = new GameSquare("hole");
+    private GameSquare square33 = new GameSquare("hole");
+    private GameSquare square34 = new GameSquare("hole");
 
 
 
@@ -58,7 +58,7 @@ public class GameBoard
 
         boardFrame.setContentPane(boardPanel);
         boardFrame.setTitle("Snow Game");
-        boardFrame.setSize(1200, 900);
+        boardFrame.setSize(800, 640);
         boardFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         boardFrame.setVisible(true);
     }
