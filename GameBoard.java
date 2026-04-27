@@ -13,7 +13,7 @@ public class GameBoard implements ActionListener
 
     private GameSquare[][] squaresArray = new GameSquare[gameBoardHeight][gameBoardWidth];
 
-    public GameBoard()
+    public GameBoard(Boolean previewBool, String[][] squareNames)
     {
         boardPanel.setLayout(boardLayout);
 
@@ -21,18 +21,23 @@ public class GameBoard implements ActionListener
         {
             for (int j = 0; j < gameBoardWidth; j++)
             {
-                String hole = "hole"; 
-                squaresArray[i][j] = new GameSquare(hole, j, i);
+                squaresArray[i][j] = new GameSquare(squareNames[i][j], j, i);
                 boardPanel.add(squaresArray[i][j]);
-                squaresArray[i][j].addActionListener(this);
+                if (!previewBool)
+                {
+                    squaresArray[i][j].addActionListener(this);
+                }
             }
         }
 
-        boardFrame.setContentPane(boardPanel);
-        boardFrame.setTitle("Snow Game");
-        boardFrame.setSize(800, 640);
-        boardFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        boardFrame.setVisible(true);
+        if (!previewBool)
+        {
+            boardFrame.setContentPane(boardPanel);
+            boardFrame.setTitle("Snow Game");
+            boardFrame.setSize(800, 640);
+            boardFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            boardFrame.setVisible(true);
+        }
     }
 
     public GameSquare[][] getSquaresArray()
@@ -40,6 +45,10 @@ public class GameBoard implements ActionListener
         return squaresArray;
     }
     
+    public JPanel getBoardPanel()
+    {
+        return this.boardPanel;
+    }
 
     public void actionPerformed(ActionEvent e)
     {
