@@ -15,6 +15,23 @@ public class GameSquare extends JButton
         this.xCord = x;
         this.yCord = y;
     }
+
+    public Boolean canBeSelected()
+    {
+        if (squareName.startsWith("snowball_"))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public void selected()
+    {
+        this.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
+    }
     
     public String getName()
     {

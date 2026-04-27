@@ -52,15 +52,10 @@ public class GameBoard implements ActionListener
 
     public void actionPerformed(ActionEvent e)
     {
-        for (int i = 0; i < gameBoardHeight; i++)
+        GameSquare clickedSquare = (GameSquare) e.getSource();
+        if (clickedSquare.canBeSelected())
         {
-            for (int j = 0; j < gameBoardWidth; j++)
-            {
-                if (e.getSource() == squaresArray[i][j])
-                {
-                    
-                }
-            }
+            clickedSquare.selected();
         }
     }
 

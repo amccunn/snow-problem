@@ -89,7 +89,6 @@ public class Menu implements ActionListener
             new GameBoard(false, gameLevels[pageNumber - 1]);
         }
 
-
         if (pageNumber == 61)
         {
             pageNumber = 1;
