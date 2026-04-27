@@ -68,26 +68,36 @@ public class Menu implements ActionListener
     public void updateMenu()
     {
         selectButton.setText("Play Level " + pageNumber);
+        menuPanel.remove(previewGameBoard.getBoardPanel());
         previewGameBoard = new GameBoard(true, this.gameLevels[pageNumber - 1]);
         menuPanel.add("Center", previewGameBoard.getBoardPanel());
     }
 
     public void actionPerformed(ActionEvent e)
     {
-        if (e.getSource() == leftArrowButton)
+        if (e.getSource() == rightArrowButton)
         {
             pageNumber++;
         }
-        else if (e.getSource() == rightArrowButton)
+        else if (e.getSource() == leftArrowButton)
         {
             pageNumber--;
         }
-        if (pageNumber == 0 || pageNumber == 61)
+        else if (e.getSource() == selectButton)
+        {
+            menuFrame.dispose();
+            new GameBoard(false, gameLevels[pageNumber - 1]);
+        }
+
+
+        if (pageNumber == 61)
         {
             pageNumber = 1;
         }
-        System.out.println(pageNumber);
+        else if (pageNumber == 0)
+        {
+            pageNumber = 60;
+        }
         updateMenu();
     }
-
 }
