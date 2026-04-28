@@ -3,6 +3,7 @@ import javax.swing.*;
 
 public class GameSquare extends JButton
 {
+    private Boolean selectedBoolean;
     private String squareName;
     private int xCord;
     private int yCord;
@@ -14,6 +15,7 @@ public class GameSquare extends JButton
         this.squareName = name;
         this.xCord = x;
         this.yCord = y;
+        this.selectedBoolean = false;
     }
 
     public Boolean canBeSelected()
@@ -30,7 +32,19 @@ public class GameSquare extends JButton
 
     public void selected()
     {
-        this.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
+        this.setBorder(BorderFactory.createLineBorder(Color.RED, 3));
+        this.selectedBoolean = true;
+    }
+
+    public void deSelect()
+    {
+        this.setBorder(null);
+        this.selectedBoolean = false;
+    }
+
+    public Boolean getSelectedBoolean()
+    {
+        return this.selectedBoolean;
     }
     
     public String getName()

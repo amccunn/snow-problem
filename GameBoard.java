@@ -13,6 +13,11 @@ public class GameBoard implements ActionListener
 
     private GameSquare[][] squaresArray = new GameSquare[gameBoardHeight][gameBoardWidth];
 
+    /**
+     * @param previewBool if true then create only a preview and dont add listeners
+     * @param squareNames a 2d array which represents what should be in each square
+     * if its just a preview then I can just use the boardPanel
+     */
     public GameBoard(Boolean previewBool, String[][] squareNames)
     {
         boardPanel.setLayout(boardLayout);
@@ -30,6 +35,7 @@ public class GameBoard implements ActionListener
             }
         }
 
+        //creates the all details regarding the frame only if its not a preview
         if (!previewBool)
         {
             boardFrame.setContentPane(boardPanel);
@@ -42,7 +48,7 @@ public class GameBoard implements ActionListener
 
     public GameSquare[][] getSquaresArray()
     {
-        return squaresArray;
+        return this.squaresArray;
     }
     
     public JPanel getBoardPanel()
@@ -50,13 +56,28 @@ public class GameBoard implements ActionListener
         return this.boardPanel;
     }
 
+    //listeners for the squares on the screen
     public void actionPerformed(ActionEvent e)
     {
+        //the only things you can press in gameboard are the gamesquares so shouldnt ever break
         GameSquare clickedSquare = (GameSquare) e.getSource();
+
         if (clickedSquare.canBeSelected())
         {
+            //deSelects everything selected on board before selecting new item
+            for (int i = 0; i < gameBoardHeight; i++)
+            {
+                for (int j = 0; j < gameBoardWidth; j++)
+                {
+                    if (squaresArray[i][j].getSelectedBoolean())
+                    {
+                        squaresArray[i][j].deSelect();
+                    }
+                }
+            }
             clickedSquare.selected();
         }
+
     }
 
 }
