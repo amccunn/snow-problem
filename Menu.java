@@ -31,7 +31,7 @@ public class Menu implements ActionListener
             {"hole", "hole", "hole", "hole", "hole"},
             {"head_blue", "hole", "hole", "hole", "snowball_large"},
         },
-        {
+        {//level 2
             {"hole", "hole", "hole", "hole", "hole"},
             {"snowball_large", "hole", "hole", "head_yellow", "hole"},
             {"hole", "tree", "hole", "hole", "snowball_small"},

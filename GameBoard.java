@@ -56,6 +56,52 @@ public class GameBoard implements ActionListener
         return this.boardPanel;
     }
 
+    //returns an array of what the squares around the currentSquare are {up, right, down, left}
+    public GameSquare[] checkAdjacentSquares(GameSquare currentSquare)
+    {
+        GameSquare[] adjacentSquares = new GameSquare[4];
+
+        //check up
+        if (currentSquare.getCords()[1] > 0)
+        {
+            adjacentSquares[0] = squaresArray[currentSquare.getCords()[1] - 1][currentSquare.getCords()[0]];
+        }
+
+        //check down
+        if (currentSquare.getCords()[1] < 3)
+        {
+            adjacentSquares[2] = squaresArray[currentSquare.getCords()[1] + 1][currentSquare.getCords()[0]];
+        }
+
+        //check right
+        if (currentSquare.getCords()[0] < 4)
+        {
+            adjacentSquares[1] = squaresArray[currentSquare.getCords()[1]][currentSquare.getCords()[0] + 1];
+        }
+
+        //check left
+        if (currentSquare.getCords()[0] > 0)
+        {
+            adjacentSquares[3] = squaresArray[currentSquare.getCords()[1]][currentSquare.getCords()[0] - 1];
+        }
+
+        return adjacentSquares;
+    }
+
+    public void promptAction(GameSquare currentSquare)
+    {
+        GameBoard[] adjacentSquares = checkAdjacentSquares(currentSquare);
+        String[] directions = {"up", "right", "down", "left"};
+
+        for (int i = 0; i < 4; i++)
+        {
+            if (adjacentSquares[i].getName() == "hole")
+            {
+                adjacentSquares[i].setIcon
+            }
+        }
+    }
+
     //listeners for the squares on the screen
     public void actionPerformed(ActionEvent e)
     {
@@ -76,6 +122,8 @@ public class GameBoard implements ActionListener
                 }
             }
             clickedSquare.selected();
+
+            
         }
 
     }
