@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 
 public class Menu implements ActionListener
 {
-    private int pageNumber = 1;
+    private int pageNumber;
 
     private BorderLayout menuLayout = new BorderLayout();
 
@@ -39,9 +39,11 @@ public class Menu implements ActionListener
         },
     };
 
-    public Menu()
+    public Menu(int pageNum)
     {
-        previewGameBoard = new GameBoard(true, this.gameLevels[0]);
+        this.pageNumber = pageNum;
+
+        previewGameBoard = new GameBoard(true, this.gameLevels[pageNum - 1], 1);
 
         selectButton.setText("Play Level 1");
         menuPanel.setLayout(menuLayout);
@@ -69,7 +71,7 @@ public class Menu implements ActionListener
     {
         selectButton.setText("Play Level " + pageNumber);
         menuPanel.remove(previewGameBoard.getBoardPanel());
-        previewGameBoard = new GameBoard(true, this.gameLevels[pageNumber - 1]);
+        previewGameBoard = new GameBoard(true, this.gameLevels[pageNumber - 1], pageNumber);
         menuPanel.add("Center", previewGameBoard.getBoardPanel());
     }
 
@@ -86,7 +88,7 @@ public class Menu implements ActionListener
         else if (e.getSource() == selectButton)
         {
             menuFrame.dispose();
-            new GameBoard(false, gameLevels[pageNumber - 1]);
+            new GameBoard(false, gameLevels[pageNumber - 1], pageNumber);
         }
 
         if (pageNumber == 61)

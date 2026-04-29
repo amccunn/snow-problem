@@ -5,6 +5,7 @@ import javax.swing.*;
 
 public class GameBoard implements ActionListener
 {
+    private int levelNumber;
     private JFrame boardFrame = new JFrame();
     private JPanel boardPanel = new JPanel();
     private int gameBoardWidth = 5;
@@ -18,8 +19,10 @@ public class GameBoard implements ActionListener
      * @param squareNames a 2d array which represents what should be in each square
      * if its just a preview then I can just use the boardPanel
      */
-    public GameBoard(Boolean previewBool, String[][] squareNames)
+    public GameBoard(Boolean previewBool, String[][] squareNames, int level)
     {
+        this.levelNumber = level;
+
         boardPanel.setLayout(boardLayout);
 
         for (int i = 0; i < gameBoardHeight; i++)
@@ -44,6 +47,11 @@ public class GameBoard implements ActionListener
             boardFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             boardFrame.setVisible(true);
         }
+    }
+
+    public int getLevelNumber()
+    {
+        return this.levelNumber;
     }
 
     public GameSquare[][] getSquaresArray()
@@ -88,17 +96,25 @@ public class GameBoard implements ActionListener
         return adjacentSquares;
     }
 
+    //take the current square and put arrows on available squares next to it
     public void promptAction(GameSquare currentSquare)
     {
-        GameBoard[] adjacentSquares = checkAdjacentSquares(currentSquare);
+        GameSquare[] adjacentSquares = checkAdjacentSquares(currentSquare);
         String[] directions = {"up", "right", "down", "left"};
 
         for (int i = 0; i < 4; i++)
         {
-            if (adjacentSquares[i].getName() == "hole")
+            //make sure its a GameSquare not null before calling GameSquare methods
+            if (adjacentSquares[i] != null)
             {
-                adjacentSquares[i].setIcon
+                if (adjacentSquares[i].getName() == "hole")
+                {
+                    ImageIcon arrowIcon = new ImageIcon(directions[i] + "_arrow.png");
+                    adjacentSquares[i].setIcon(arrowIcon);
+                    adjacentSquares[i].setName(directions[i] + "_arrow");
+                }
             }
+            
         }
     }
 
@@ -111,6 +127,7 @@ public class GameBoard implements ActionListener
         if (clickedSquare.canBeSelected())
         {
             //deSelects everything selected on board before selecting new item
+            //also now going to make it get rid of existing arrows
             for (int i = 0; i < gameBoardHeight; i++)
             {
                 for (int j = 0; j < gameBoardWidth; j++)
@@ -119,11 +136,26 @@ public class GameBoard implements ActionListener
                     {
                         squaresArray[i][j].deSelect();
                     }
+
+                    if (squaresArray[i][j].getName().endsWith("_arrow"))
+                    {
+                        ImageIcon holeIcon = new ImageIcon("hole.png");
+                        squaresArray[i][j].setIcon(holeIcon);
+                        squaresArray[i][j].setName("hole");
+                    }
                 }
             }
             clickedSquare.selected();
-
-            
+            promptAction(clickedSquare);
+        } 
+        //move
+        else if (clickedSquare.getName().endsWith("_arrow"))
+        {
+            //what direction to move
+            if (clickedSquare.getName().startsWith("up"))
+            {
+                squaresArray[clickedSquare.getCords()[0]][clickedSquare.getCords()[1] + 1].gameMove("up", this);
+            }
         }
 
     }

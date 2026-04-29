@@ -5,6 +5,6 @@ public class Driver
 {
     public static void main(String[] args) 
     {
-        new Menu();
+        new Menu(1);
     }
 }
