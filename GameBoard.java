@@ -107,7 +107,7 @@ public class GameBoard implements ActionListener
             //make sure its a GameSquare not null before calling GameSquare methods
             if (adjacentSquares[i] != null)
             {
-                if (adjacentSquares[i].getName() == "hole")
+                if (adjacentSquares[i].getName().equals("hole"))
                 {
                     ImageIcon arrowIcon = new ImageIcon(directions[i] + "_arrow.png");
                     adjacentSquares[i].setIcon(arrowIcon);
@@ -123,6 +123,8 @@ public class GameBoard implements ActionListener
     {
         //the only things you can press in gameboard are the gamesquares so shouldnt ever break
         GameSquare clickedSquare = (GameSquare) e.getSource();
+
+        System.out.println(clickedSquare.getCords()[0] + " " + clickedSquare.getCords()[1]);
 
         if (clickedSquare.canBeSelected())
         {
@@ -147,16 +149,18 @@ public class GameBoard implements ActionListener
             }
             clickedSquare.selected();
             promptAction(clickedSquare);
-        } 
-        //move
-        else if (clickedSquare.getName().endsWith("_arrow"))
-        {
-            //what direction to move
-            if (clickedSquare.getName().startsWith("up"))
+            //move
+            if (clickedSquare.getName().endsWith("_arrow"))
             {
-                squaresArray[clickedSquare.getCords()[0]][clickedSquare.getCords()[1] + 1].gameMove("up", this);
+                //what direction to move
+                if (clickedSquare.getName().startsWith("up"))
+                {
+                    //go below the up arrow to get the square to  be moved
+                    squaresArray[clickedSquare.getCords()[1] + 1][clickedSquare.getCords()[0]].gameMove("up", this);
+                }
             }
-        }
+        } 
+    
 
     }
 

@@ -20,7 +20,7 @@ public class GameSquare extends JButton
 
     public Boolean canBeSelected()
     {
-        if (squareName.startsWith("snowball_"))
+        if (squareName.startsWith("snowball_") || squareName.endsWith("_arrow"))
         {
             return true;
         }
@@ -66,20 +66,23 @@ public class GameSquare extends JButton
     public void gameMove(String direction, GameBoard board)
     {
         int[] cords = new int[2];
-        if (direction == "up")
+        if (direction.equals("up"))
         {
-            for (int i = this.yCord - 1; i > -1; i--)
+            for (int i = this.yCord - 1; i >= 0; i--)
             {
-                if (board.getSquaresArray()[i][this.xCord].getName() != "hole")
+                if (!board.getSquaresArray()[i][this.xCord].getName().equals("hole"))
                 {
+                    System.out.println("No hole");
                     cords[0] = this.xCord;
                     cords[1] =  i - 1;
                     break;
                 }
                 else if (i == 0)
                 {
+                    System.out.println("Fall off map");
                     new GameOverScreen(board.getLevelNumber());
                 }
+                System.out.println(i);
             }
         }
     }
