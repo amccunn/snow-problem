@@ -21,7 +21,8 @@ public class GameOverScreen implements ActionListener
 
         gameOverPanel.setLayout(gameOverLayout);
         gameOverPanel.add("North", gameOverLabel);
-        gameOverPanel.add("North", mainMenuButton);
+        gameOverPanel.add("Center", mainMenuButton);
+        mainMenuButton.addActionListener(this);
        
 
         gameOverFrame.setContentPane(gameOverPanel);
@@ -36,6 +37,7 @@ public class GameOverScreen implements ActionListener
         if (e.getSource() == mainMenuButton)
         {
             new Menu(this.lastLevelNumber);
+            gameOverFrame.dispose();
         }
 
             

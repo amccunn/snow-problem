@@ -64,6 +64,11 @@ public class GameBoard implements ActionListener
         return this.boardPanel;
     }
 
+    public JFrame getFrame()
+    {
+        return this.boardFrame;
+    }
+
     //returns an array of what the squares around the currentSquare are {up, right, down, left}
     public GameSquare[] checkAdjacentSquares(GameSquare currentSquare)
     {
@@ -128,6 +133,42 @@ public class GameBoard implements ActionListener
 
         if (clickedSquare.canBeSelected())
         {
+            Boolean arrowClicked = false;
+            //need to check if arrow has been clicked before i get rid of all the arrows
+            //and take arrow nam
+            if (clickedSquare.getName().endsWith("_arrow"))
+            {
+                arrowClicked = true;
+            }
+            
+            System.out.println(clickedSquare.getName());
+
+            //move
+            if (arrowClicked)
+            {
+                System.out.println("square moving " + clickedSquare.getName());
+                //what direction to move
+                if (clickedSquare.getName().startsWith("up"))
+                {
+                    //go below the up arrow to get the square to  be moved
+                    squaresArray[clickedSquare.getCords()[1] + 1][clickedSquare.getCords()[0]].gameMove("up", this);
+                }
+                else if (clickedSquare.getName().startsWith("down"))
+                {
+                    //go above the down arrow to get the square to  be moved
+                    squaresArray[clickedSquare.getCords()[1] - 1][clickedSquare.getCords()[0]].gameMove("down", this);
+                }
+                else if (clickedSquare.getName().startsWith("left"))
+                {
+                    //go to the right the left arrow to get the square to  be moved
+                    squaresArray[clickedSquare.getCords()[1]][clickedSquare.getCords()[0] + 1].gameMove("left", this);
+                }
+                else if (clickedSquare.getName().startsWith("right"))
+                {
+                    //go to the left the right arrow to get the square to  be moved
+                    squaresArray[clickedSquare.getCords()[1]][clickedSquare.getCords()[0] - 1].gameMove("right", this);
+                }
+            }
             //deSelects everything selected on board before selecting new item
             //also now going to make it get rid of existing arrows
             for (int i = 0; i < gameBoardHeight; i++)
@@ -147,17 +188,12 @@ public class GameBoard implements ActionListener
                     }
                 }
             }
-            clickedSquare.selected();
-            promptAction(clickedSquare);
-            //move
-            if (clickedSquare.getName().endsWith("_arrow"))
+
+            //only snowballs can prompt an action
+            if (clickedSquare.getName().startsWith("snowball_"))
             {
-                //what direction to move
-                if (clickedSquare.getName().startsWith("up"))
-                {
-                    //go below the up arrow to get the square to  be moved
-                    squaresArray[clickedSquare.getCords()[1] + 1][clickedSquare.getCords()[0]].gameMove("up", this);
-                }
+                clickedSquare.selected();
+                promptAction(clickedSquare);
             }
         } 
     

@@ -63,16 +63,31 @@ public class GameSquare extends JButton
         return cords;
     }
 
+    public void setCords(int[] cords)
+    {
+        this.xCord = cords[0];
+        this.yCord = cords[1];
+    }
+
+
+    public void swap(GameSquare target)
+    {
+        
+    }
+
     public void gameMove(String direction, GameBoard board)
     {
+        System.out.println("Moving...");
         int[] cords = new int[2];
         if (direction.equals("up"))
         {
+            System.out.println("Going up");
+
             for (int i = this.yCord - 1; i >= 0; i--)
             {
-                if (!board.getSquaresArray()[i][this.xCord].getName().equals("hole"))
+                if (!board.getSquaresArray()[i][this.xCord].getName().equals("hole") && !board.getSquaresArray()[i][this.xCord].getName().endsWith("_arrow"))
                 {
-                    System.out.println("No hole");
+                    System.out.println("No hole " + i);
                     cords[0] = this.xCord;
                     cords[1] =  i - 1;
                     break;
@@ -81,9 +96,78 @@ public class GameSquare extends JButton
                 {
                     System.out.println("Fall off map");
                     new GameOverScreen(board.getLevelNumber());
+                    board.getFrame().dispose();
                 }
                 System.out.println(i);
             }
         }
+        else if (direction.equals("down"))
+        {
+            System.out.println("Going down");
+
+            for (int i = this.yCord + 1; i <= 3; i++)
+            {
+                if (!board.getSquaresArray()[i][this.xCord].getName().equals("hole") && !board.getSquaresArray()[i][this.xCord].getName().endsWith("_arrow"))
+                {
+                    System.out.println("No hole " + i);
+                    cords[0] = this.xCord;
+                    cords[1] =  i + 1;
+                    break;
+                }
+                else if (i == 3)
+                {
+                    System.out.println("Fall off map");
+                    new GameOverScreen(board.getLevelNumber());
+                    board.getFrame().dispose();
+                }
+                System.out.println(i);
+            }
+        }
+        else if (direction.equals("right"))
+        {
+            System.out.println("Going right");
+
+            for (int i = this.xCord + 1; i >= 4; i++)
+            {
+                if (!board.getSquaresArray()[this.yCord][i].getName().equals("hole") && !board.getSquaresArray()[this.yCord][i].getName().endsWith("_arrow"))
+                {
+                    System.out.println("No hole " + i);
+                    cords[0] = i - 1;
+                    cords[1] =  this.yCord;
+                    break;
+                }
+                else if (i == 4)
+                {
+                    System.out.println("Fall off map");
+                    new GameOverScreen(board.getLevelNumber());
+                    board.getFrame().dispose();
+                }
+                System.out.println(i);
+            }
+        }
+        else if (direction.equals("left"))
+        {
+            System.out.println("Going left");
+
+            for (int i = this.xCord - 1; i >= 0; i--)
+            {
+                if (!board.getSquaresArray()[this.yCord][i].getName().equals("hole") && !board.getSquaresArray()[this.yCord][i].getName().endsWith("_arrow"))
+                {
+                    System.out.println("No hole " + i);
+                    cords[0] = i + 1;
+                    cords[1] =  this.yCord;
+                    break;
+                }
+                else if (i == 0)
+                {
+                    System.out.println("Fall off map");
+                    new GameOverScreen(board.getLevelNumber());
+                    board.getFrame().dispose();
+                }
+                System.out.println(i);
+            }
+        }
+        System.out.println(cords[0] + " " + cords[1]);
+        this.swap(board.getSquaresArray()[cords[1]][cords[0]]);
     }
 }

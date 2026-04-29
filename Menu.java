@@ -43,9 +43,9 @@ public class Menu implements ActionListener
     {
         this.pageNumber = pageNum;
 
-        previewGameBoard = new GameBoard(true, this.gameLevels[pageNum - 1], 1);
+        previewGameBoard = new GameBoard(true, this.gameLevels[pageNum - 1], pageNum);
 
-        selectButton.setText("Play Level 1");
+        selectButton.setText("Play Level " + pageNum);
         menuPanel.setLayout(menuLayout);
         menuPanel.add("North", selectLabel);
 
