@@ -69,6 +69,11 @@ public class GameBoard implements ActionListener
         return this.boardFrame;
     }
 
+    public void setSquaresArray(int x, int y, GameSquare square)
+    {
+        this.squaresArray[y][x] = (GameSquare) square;
+    }
+
     //returns an array of what the squares around the currentSquare are {up, right, down, left}
     public GameSquare[] checkAdjacentSquares(GameSquare currentSquare)
     {
@@ -130,12 +135,12 @@ public class GameBoard implements ActionListener
         GameSquare clickedSquare = (GameSquare) e.getSource();
 
         System.out.println(clickedSquare.getCords()[0] + " " + clickedSquare.getCords()[1]);
+        System.out.println(clickedSquare.getName());
 
         if (clickedSquare.canBeSelected())
         {
             Boolean arrowClicked = false;
-            //need to check if arrow has been clicked before i get rid of all the arrows
-            //and take arrow nam
+            //need to check if arrow has been clicked
             if (clickedSquare.getName().endsWith("_arrow"))
             {
                 arrowClicked = true;

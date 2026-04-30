@@ -63,16 +63,27 @@ public class GameSquare extends JButton
         return cords;
     }
 
-    public void setCords(int[] cords)
+    public void setCords(int x, int y)
     {
-        this.xCord = cords[0];
-        this.yCord = cords[1];
+        this.xCord = x;
+        this.yCord = y;
     }
 
 
-    public void swap(GameSquare target)
+    public void swap(GameSquare target, GameBoard board)
     {
-        
+        //change the icons 
+        ImageIcon newIconThis = new ImageIcon(this.squareName + ".png");
+        ImageIcon newIconTarget = new ImageIcon(target.getName() + ".png");
+
+        this.setIcon(newIconTarget);
+        target.setIcon(newIconThis);
+
+        //change the names of the squares
+        String tempName = this.squareName;
+        this.squareName = target.getName();
+        target.setName(tempName);
+
     }
 
     public void gameMove(String direction, GameBoard board)
@@ -111,7 +122,7 @@ public class GameSquare extends JButton
                 {
                     System.out.println("No hole " + i);
                     cords[0] = this.xCord;
-                    cords[1] =  i + 1;
+                    cords[1] =  i - 1;
                     break;
                 }
                 else if (i == 3)
@@ -120,14 +131,14 @@ public class GameSquare extends JButton
                     new GameOverScreen(board.getLevelNumber());
                     board.getFrame().dispose();
                 }
-                System.out.println(i);
+                System.out.println(i + " " + board.getSquaresArray()[i][this.xCord].getName());
             }
         }
         else if (direction.equals("right"))
         {
             System.out.println("Going right");
 
-            for (int i = this.xCord + 1; i >= 4; i++)
+            for (int i = this.xCord + 1; i <= 4; i++)
             {
                 if (!board.getSquaresArray()[this.yCord][i].getName().equals("hole") && !board.getSquaresArray()[this.yCord][i].getName().endsWith("_arrow"))
                 {
@@ -168,6 +179,6 @@ public class GameSquare extends JButton
             }
         }
         System.out.println(cords[0] + " " + cords[1]);
-        this.swap(board.getSquaresArray()[cords[1]][cords[0]]);
+        this.swap(board.getSquaresArray()[cords[1]][cords[0]], board);
     }
 }
