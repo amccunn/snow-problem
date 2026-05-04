@@ -117,12 +117,25 @@ public class GameBoard implements ActionListener
             //make sure its a GameSquare not null before calling GameSquare methods
             if (adjacentSquares[i] != null)
             {
-                if (adjacentSquares[i].getName().equals("hole"))
+                if (adjacentSquares[i].getName().equals("hole") && !currentSquare.getName().startsWith("head_"))
                 {
                     ImageIcon arrowIcon = new ImageIcon(directions[i] + "_arrow.png");
                     adjacentSquares[i].setIcon(arrowIcon);
                     adjacentSquares[i].setName(directions[i] + "_arrow");
                 }
+                else if (adjacentSquares[i].getName().equals("snowball_large") && currentSquare.getName().equals("snowball_small"))
+                {
+                    adjacentSquares[i].setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
+                    adjacentSquares[i].setStackable(true);
+                    currentSquare.setStackable(true);
+                }
+                else if (adjacentSquares[i].getName().equals("snowman_stack") && currentSquare.getName().startsWith("head_"))
+                {
+                    adjacentSquares[i].setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
+                    adjacentSquares[i].setStackable(true);
+                    currentSquare.setStackable(true);
+                }
+
             }
             
         }
@@ -137,7 +150,7 @@ public class GameBoard implements ActionListener
         System.out.println(clickedSquare.getCords()[0] + " " + clickedSquare.getCords()[1]);
         System.out.println(clickedSquare.getName());
 
-        if (clickedSquare.canBeSelected())
+        if (clickedSquare.canBeSelected(this))
         {
             Boolean arrowClicked = false;
             //need to check if arrow has been clicked
@@ -174,6 +187,36 @@ public class GameBoard implements ActionListener
                     squaresArray[clickedSquare.getCords()[1]][clickedSquare.getCords()[0] - 1].gameMove("right", this);
                 }
             }
+
+            if (clickedSquare.getName().startsWith("head_"))
+            {
+                clickedSquare.setStackable(true);
+            }
+
+            System.out.println(clickedSquare.isStackable());
+            //stack the snowballs if stackable
+            if (clickedSquare.isStackable())
+            {
+                GameSquare[] adjacentSquares = checkAdjacentSquares(clickedSquare);
+                System.out.println("Stackable");
+
+                //find the square next to the current one that is getting stacked
+                for (int i = 0; i < adjacentSquares.length; i++)
+                {
+                    if (adjacentSquares[i] != null)
+                    {
+                        if (adjacentSquares[i].isStackable() && (!adjacentSquares[i].getName().startsWith("head_") || clickedSquare.getName().equals("snowman_stack")))
+                        {
+                            clickedSquare.stack(adjacentSquares[i]);
+                            clickedSquare.setStackable(false);
+                            adjacentSquares[i].setStackable(false);
+                            clickedSquare.deSelect();
+                        }
+                    }
+                    
+                }
+            }
+            
             //deSelects everything selected on board before selecting new item
             //also now going to make it get rid of existing arrows
             for (int i = 0; i < gameBoardHeight; i++)
@@ -195,13 +238,14 @@ public class GameBoard implements ActionListener
             }
 
             //only snowballs can prompt an action
-            if (clickedSquare.getName().startsWith("snowball_"))
+            if (clickedSquare.getName().startsWith("snowball_") || clickedSquare.getName().startsWith("head_"))
             {
                 clickedSquare.selected();
                 promptAction(clickedSquare);
             }
-        } 
-    
+        }
+        
+
 
     }
 

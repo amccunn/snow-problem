@@ -3,6 +3,7 @@ import javax.swing.*;
 
 public class GameSquare extends JButton
 {
+    private Boolean readyToStack;
     private Boolean selectedBoolean;
     private String squareName;
     private int xCord;
@@ -16,13 +17,40 @@ public class GameSquare extends JButton
         this.xCord = x;
         this.yCord = y;
         this.selectedBoolean = false;
+        this.readyToStack = false;
     }
 
-    public Boolean canBeSelected()
+    public Boolean isStackable()
     {
-        if (squareName.startsWith("snowball_") || squareName.endsWith("_arrow"))
+        return this.readyToStack;
+    }
+
+    public void setStackable(Boolean stack)
+    {
+        this.readyToStack = stack;
+    }
+
+    public Boolean canBeSelected(GameBoard theGameBoard)
+    {
+        if (squareName.startsWith("snowball_") || squareName.endsWith("_arrow") || squareName.equals("snowman_stack"))
         {
             return true;
+        }
+        else if (squareName.startsWith("head_"))
+        {
+            GameSquare[] squares = theGameBoard.checkAdjacentSquares(this);
+    
+            for (int i = 0; i < squares.length; i++)
+            {
+                if (squares[i] != null)
+                {
+                    if (squares[i].getName().equals("snowman_stack"))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
         else
         {
@@ -84,6 +112,33 @@ public class GameSquare extends JButton
         this.squareName = target.getName();
         target.setName(tempName);
 
+    }
+
+    public void stack(GameSquare topStack)
+    {
+        System.out.println("Stacking...");
+        if (this.getName().startsWith("snowball_"))
+        {
+            ImageIcon stackIcon = new ImageIcon("snowman_stack.png");
+            this.setIcon(stackIcon);
+            this.setName("snowman_stack");
+        }
+        else
+        {
+            System.out.println(topStack.getName());            
+            String colour = topStack.getName().split("_")[1];
+            System.out.println(colour);
+
+
+            ImageIcon stackIcon = new ImageIcon("snowman_" + colour + ".png");
+            this.setIcon(stackIcon);
+            this.setName("snowman_" + colour);
+        }
+
+        ImageIcon holeIcon = new ImageIcon("hole.png");
+        topStack.setIcon(holeIcon);
+        topStack.setName("hole");
+        
     }
 
     public void gameMove(String direction, GameBoard board)
