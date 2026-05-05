@@ -141,6 +141,21 @@ public class GameBoard implements ActionListener
         }
     }
 
+    public Boolean checkWin()
+    {
+        for (int i = 0; i < gameBoardHeight; i++)
+        {
+            for (int j = 0; j < gameBoardWidth; j++)
+            {
+                if (squaresArray[i][j].getName().startsWith("head_"))
+                {
+                    return false;
+                }
+            } 
+        }
+        return true;
+    }
+
     //listeners for the squares on the screen
     public void actionPerformed(ActionEvent e)
     {
@@ -245,6 +260,11 @@ public class GameBoard implements ActionListener
             }
         }
         
+        if (checkWin())
+        {
+            new GameWinScreen(levelNumber);
+            boardFrame.dispose();
+        }
 
 
     }

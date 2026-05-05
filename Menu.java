@@ -37,6 +37,72 @@ public class Menu implements ActionListener
             {"hole", "tree", "hole", "hole", "snowball_small"},
             {"hole", "hole", "hole", "hole","hole"},
         },
+        {//level 3
+            {"tree", "hole", "hole", "snowball_large", "hole"},
+            {"hole", "hole", "hole", "snowball_small", "hole"},
+            {"hole", "hole", "hole", "hole","head_red"},
+            {"hole", "tree", "hole", "hole","hole"},
+        },
+        {//level 4
+            {"tree", "hole", "hole", "hole", "snowball_small"},
+            {"hole", "hole", "hole", "hole", "hole"},
+            {"hole", "hole", "hole", "hole", "hole"},
+            {"head_yellow", "hole", "hole", "hole","snowball_large"},
+        },
+        {//level 5
+            {"tree", "hole", "tree", "hole", "tree"},
+            {"hole", "hole", "head_blue", "hole", "hole"},
+            {"hole", "hole", "hole", "hole", "hole"},
+            {"snowball_small", "hole", "hole", "hole","snowball_large"},
+        },
+        {//level 6
+            {"hole", "hole", "tree", "hole", "hole"},
+            {"head_blue", "snowball_small", "hole", "snowball_large", "hole"},
+            {"hole", "hole", "hole", "hole", "hole"},
+            {"hole", "hole", "tree", "hole","hole"},
+        },
+        {//level 7
+            {"hole", "hole", "hole", "hole", "hole"},
+            {"hole", "tree", "tree", "hole", "hole"},
+            {"hole", "hole", "hole", "hole", "head_red"},
+            {"snowball_small", "hole", "snowball_large", "hole","hole"},
+        },
+        {//level 8
+            {"hole", "tree", "hole", "snowball_small", "snowball_large"},
+            {"hole", "hole", "hole", "hole", "hole"},
+            {"hole", "hole", "hole", "hole", "tree"},
+            {"hole", "hole", "head_blue", "hole","hole"},
+        },
+        {//level 9
+            {"hole", "hole", "hole", "hole", "hole"},
+            {"snowball_large", "hole", "hole", "head_yellow", "hole"},
+            {"hole", "tree", "hole", "hole", "snowball_small"},
+            {"hole", "hole", "hole", "hole","hole"},
+        },
+        {//level 10
+            {"hole", "hole", "hole", "hole", "hole"},
+            {"snowball_large", "hole", "hole", "head_yellow", "hole"},
+            {"hole", "tree", "hole", "hole", "snowball_small"},
+            {"hole", "hole", "hole", "hole","hole"},
+        },
+        {//level 11
+            {"hole", "hole", "hole", "hole", "hole"},
+            {"snowball_large", "hole", "hole", "head_yellow", "hole"},
+            {"hole", "tree", "hole", "hole", "snowball_small"},
+            {"hole", "hole", "hole", "hole","hole"},
+        },
+        {//level 12
+            {"hole", "hole", "hole", "hole", "hole"},
+            {"snowball_large", "hole", "hole", "head_yellow", "hole"},
+            {"hole", "tree", "hole", "hole", "snowball_small"},
+            {"hole", "hole", "hole", "hole","hole"},
+        },
+        {//level 13
+            {"hole", "hole", "hole", "hole", "hole"},
+            {"snowball_large", "hole", "hole", "head_yellow", "hole"},
+            {"hole", "tree", "hole", "hole", "snowball_small"},
+            {"hole", "hole", "hole", "hole","hole"},
+        },
     };
 
     public Menu(int pageNum)
@@ -91,13 +157,13 @@ public class Menu implements ActionListener
             new GameBoard(false, gameLevels[pageNumber - 1], pageNumber);
         }
 
-        if (pageNumber == 61)
+        if (pageNumber > gameLevels.length)
         {
             pageNumber = 1;
         }
-        else if (pageNumber == 0)
+        else if (pageNumber < 1)
         {
-            pageNumber = 60;
+            pageNumber = gameLevels.length;
         }
         updateMenu();
     }
