@@ -180,6 +180,14 @@ public class GameBoard implements ActionListener
             if (arrowClicked)
             {
                 System.out.println("square moving " + clickedSquare.getName());
+                for (int i = 0; i < gameBoardHeight; i++)
+                {
+                    for (int j = 0; j < gameBoardWidth; j++)
+                    {
+                        squaresArray[i][j].setStackable(false);
+                        squaresArray[i][j].deSelect();
+                    }
+                }
                 //what direction to move
                 if (clickedSquare.getName().startsWith("up"))
                 {
@@ -205,7 +213,17 @@ public class GameBoard implements ActionListener
 
             if (clickedSquare.getName().startsWith("head_"))
             {
-                clickedSquare.setStackable(true);
+                GameSquare[] adjacentSquaresHead = checkAdjacentSquares(clickedSquare);
+                for (int i = 0; i < 4; i++)
+                {
+                    if (adjacentSquaresHead[i] != null)
+                    {
+                        if (adjacentSquaresHead[i].getName().equals("snowball_stack"))
+                        {
+                            clickedSquare.setStackable(true);
+                        }
+                    }
+                }
             }
 
             System.out.println(clickedSquare.isStackable());
@@ -227,6 +245,7 @@ public class GameBoard implements ActionListener
                             adjacentSquares[i].setStackable(false);
                             clickedSquare.deSelect();
                         }
+                       
                     }
                     
                 }

@@ -85,24 +85,6 @@ public class Menu implements ActionListener
             {"hole", "tree", "hole", "hole", "snowball_small"},
             {"hole", "hole", "hole", "hole","hole"},
         },
-        {//level 11
-            {"hole", "hole", "hole", "hole", "hole"},
-            {"snowball_large", "hole", "hole", "head_yellow", "hole"},
-            {"hole", "tree", "hole", "hole", "snowball_small"},
-            {"hole", "hole", "hole", "hole","hole"},
-        },
-        {//level 12
-            {"hole", "hole", "hole", "hole", "hole"},
-            {"snowball_large", "hole", "hole", "head_yellow", "hole"},
-            {"hole", "tree", "hole", "hole", "snowball_small"},
-            {"hole", "hole", "hole", "hole","hole"},
-        },
-        {//level 13
-            {"hole", "hole", "hole", "hole", "hole"},
-            {"snowball_large", "hole", "hole", "head_yellow", "hole"},
-            {"hole", "tree", "hole", "hole", "snowball_small"},
-            {"hole", "hole", "hole", "hole","hole"},
-        },
     };
 
     public Menu(int pageNum)

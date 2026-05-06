@@ -155,7 +155,7 @@ public class GameSquare extends JButton
                 {
                     System.out.println("No hole " + i);
                     cords[0] = this.xCord;
-                    cords[1] =  i - 1;
+                    cords[1] =  i + 1;
                     break;
                 }
                 else if (i == 0)
