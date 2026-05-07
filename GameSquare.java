@@ -32,10 +32,12 @@ public class GameSquare extends JButton
 
     public Boolean canBeSelected(GameBoard theGameBoard)
     {
+        //snowball and arrows prompt action when selected but a stack doesnt can only be selected when a head was selected before it
         if (squareName.startsWith("snowball_") || squareName.endsWith("_arrow") || squareName.equals("snowman_stack"))
         {
             return true;
         }
+        //heads can be selected but only if they have a snowman stack next to them
         else if (squareName.startsWith("head_"))
         {
             GameSquare[] squares = theGameBoard.checkAdjacentSquares(this);

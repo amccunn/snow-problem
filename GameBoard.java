@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 
 public class GameBoard implements ActionListener
 {
@@ -18,11 +19,17 @@ public class GameBoard implements ActionListener
     private int gameBoardWidth = 5;
     private int gameBoardHeight = 4;
     private GridLayout boardLayout = new GridLayout(gameBoardHeight, gameBoardWidth);
+
+    //this allows me to put a toolbar at the top and the game below it
     private BoxLayout fullLayout = new BoxLayout(fullPanel, BoxLayout.Y_AXIS);
     private BoxLayout toolBarLayout = new BoxLayout(toolBarPanel, BoxLayout.X_AXIS);
+
     private JButton resetButton = new JButton("Reset level");
-    private JLabel highscoreLabel = new JLabel("Highscore is " + highscores[levelNumber]);
+    private JLabel highscoreLabel = new JLabel("Highscore is none");
     private JLabel currentScoreLabel = new JLabel("Current score is 0");
+    private int currentScore = 0;
+    private Boolean movedThisTurn = false;
+    private GameSquare lastSquare = null;
 
     private GameSquare[][] squaresArray = new GameSquare[gameBoardHeight][gameBoardWidth];
     private String[][] originalArray;
@@ -36,18 +43,19 @@ public class GameBoard implements ActionListener
     {
         this.levelNumber = level;
 
-
         try
         {
             BufferedReader highscoreContents = new BufferedReader(new FileReader("highscores.txt"));
             int count = 0;
+            String hc;
 
-                while (highscoreContents.readLine() != null)
-                {
-                    highscores[count] = highscoreContents.readLine();
-                }
+            while ((hc = highscoreContents.readLine()) != null)
+            {
+                highscores[count] = hc;
+                count++;
+            }
 
-                highscoreContents.close();
+            highscoreContents.close();
         }
         catch (FileNotFoundException e)
         {
@@ -73,6 +81,7 @@ public class GameBoard implements ActionListener
             }
         }
         originalArray = squareNames;
+        highscoreLabel.setText("Highscore is " + highscores[levelNumber - 1]);
 
         //creates the all details regarding the frame only if its not a preview
         if (!previewBool)
@@ -235,6 +244,7 @@ public class GameBoard implements ActionListener
                 //move
                 if (arrowClicked)
                 {
+                    movedThisTurn = true;
                     System.out.println("square moving " + clickedSquare.getName());
                     for (int i = 0; i < gameBoardHeight; i++)
                     {
@@ -265,6 +275,8 @@ public class GameBoard implements ActionListener
                         //go to the left the right arrow to get the square to  be moved
                         squaresArray[clickedSquare.getCords()[1]][clickedSquare.getCords()[0] - 1].gameMove("right", this);
                     }
+                    currentScore++;
+                    currentScoreLabel.setText("Current score is " + currentScore);
                 }
 
                 if (clickedSquare.getName().startsWith("head_"))
@@ -286,22 +298,16 @@ public class GameBoard implements ActionListener
                 //stack the snowballs if stackable
                 if (clickedSquare.isStackable())
                 {
-                    GameSquare[] adjacentSquares = checkAdjacentSquares(clickedSquare);
-                    System.out.println("Stackable");
-
-                    //find the square next to the current one that is getting stacked
-                    for (int i = 0; i < adjacentSquares.length; i++)
+                    if (lastSquare != null)
                     {
-                        if (adjacentSquares[i] != null)
+                        if (lastSquare.isStackable() && (!lastSquare.getName().startsWith("head_") || clickedSquare.getName().equals("snowman_stack")) && lastSquare != clickedSquare)
                         {
-                            if (adjacentSquares[i].isStackable() && (!adjacentSquares[i].getName().startsWith("head_") || clickedSquare.getName().equals("snowman_stack")))
-                            {
-                                clickedSquare.stack(adjacentSquares[i]);
-                                clickedSquare.setStackable(false);
-                                adjacentSquares[i].setStackable(false);
-                                clickedSquare.deSelect();
-                            }
-                        
+                            clickedSquare.stack(lastSquare);
+                            currentScore++;
+                            currentScoreLabel.setText("Current score is " + currentScore);
+                            clickedSquare.setStackable(false);
+                            lastSquare.setStackable(false);
+                            clickedSquare.deSelect();
                         }
                     }
                 }
@@ -326,19 +332,55 @@ public class GameBoard implements ActionListener
                     }
                 }
 
-                //only snowballs can prompt an action
-                if (clickedSquare.getName().startsWith("snowball_") || clickedSquare.getName().startsWith("head_"))
+                //only snowballs can prompt an action and heads in some cases
+                //dont prompt action is youve moved this turn as this part is reserved for moving
+                if ((clickedSquare.getName().startsWith("snowball_") || clickedSquare.getName().startsWith("head_")) && !movedThisTurn)
                 {
                     clickedSquare.selected();
                     promptAction(clickedSquare);
+                }
+                else if (movedThisTurn)
+                {
+                    //set movedthisturn back to false
+                    movedThisTurn = false;
                 }
             }
             
             if (checkWin())
             {
+                int numHighscore = 45091232;
+                if (highscores[levelNumber - 1].equals("N/A") || numHighscore > currentScore)
+                {
+                    highscores[levelNumber - 1] = String.valueOf(currentScore);
+                } 
+                else
+                {
+                    numHighscore = Integer.parseInt(highscores[levelNumber - 1]);
+                }
+
+                if (numHighscore != 45091232 && numHighscore > currentScore)
+                {
+                    highscores[levelNumber - 1] = String.valueOf(currentScore);
+                }
+
+                try
+                {
+                    FileWriter highscoreWriter = new FileWriter("highscores.txt");
+                    for (String score : highscores)
+                    {
+                        System.out.println(score);
+                        highscoreWriter.write(score + System.lineSeparator());
+                    }
+                    highscoreWriter.close();
+                }
+                catch (IOException exception)
+                {
+                    System.out.println("IOException");
+                }
                 new GameWinScreen(levelNumber);
                 boardFrame.dispose();
             }
+            lastSquare = clickedSquare;
         }
 
     }
