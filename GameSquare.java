@@ -143,17 +143,13 @@ public class GameSquare extends JButton
 
     public void gameMove(String direction, GameBoard board)
     {
-        System.out.println("Moving...");
         int[] cords = new int[2];
         if (direction.equals("up"))
         {
-            System.out.println("Going up");
-
             for (int i = this.yCord - 1; i >= 0; i--)
             {
                 if (!board.getSquaresArray()[i][this.xCord].getName().equals("hole") && !board.getSquaresArray()[i][this.xCord].getName().endsWith("_arrow"))
                 {
-                    System.out.println("No hole " + i);
                     cords[0] = this.xCord;
                     cords[1] =  i + 1;
                     break;

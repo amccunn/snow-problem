@@ -2,17 +2,30 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 
 public class GameBoard implements ActionListener
 {
     private int levelNumber;
+    private String[] highscores = new String[80];
     private JFrame boardFrame = new JFrame();
     private JPanel boardPanel = new JPanel();
+    private JPanel fullPanel = new JPanel();
+    private JPanel toolBarPanel = new JPanel();
     private int gameBoardWidth = 5;
     private int gameBoardHeight = 4;
     private GridLayout boardLayout = new GridLayout(gameBoardHeight, gameBoardWidth);
+    private BoxLayout fullLayout = new BoxLayout(fullPanel, BoxLayout.Y_AXIS);
+    private BoxLayout toolBarLayout = new BoxLayout(toolBarPanel, BoxLayout.X_AXIS);
+    private JButton resetButton = new JButton("Reset level");
+    private JLabel highscoreLabel = new JLabel("Highscore is " + highscores[levelNumber]);
+    private JLabel currentScoreLabel = new JLabel("Current score is 0");
 
     private GameSquare[][] squaresArray = new GameSquare[gameBoardHeight][gameBoardWidth];
+    private String[][] originalArray;
 
     /**
      * @param previewBool if true then create only a preview and dont add listeners
@@ -23,6 +36,28 @@ public class GameBoard implements ActionListener
     {
         this.levelNumber = level;
 
+
+        try
+        {
+            BufferedReader highscoreContents = new BufferedReader(new FileReader("highscores.txt"));
+            int count = 0;
+
+                while (highscoreContents.readLine() != null)
+                {
+                    highscores[count] = highscoreContents.readLine();
+                }
+
+                highscoreContents.close();
+        }
+        catch (FileNotFoundException e)
+        {
+            System.out.println("Cannot find file");
+        }
+        catch (IOException e)
+        {
+            System.out.println("Error reading file");
+        }
+        
         boardPanel.setLayout(boardLayout);
 
         for (int i = 0; i < gameBoardHeight; i++)
@@ -37,13 +72,24 @@ public class GameBoard implements ActionListener
                 }
             }
         }
+        originalArray = squareNames;
 
         //creates the all details regarding the frame only if its not a preview
         if (!previewBool)
         {
-            boardFrame.setContentPane(boardPanel);
+            toolBarPanel.setLayout(toolBarLayout);
+            toolBarPanel.add(resetButton);
+            resetButton.addActionListener(this);
+            toolBarPanel.add(highscoreLabel);
+            toolBarPanel.add(currentScoreLabel);
+
+            fullPanel.setLayout(fullLayout);
+            fullPanel.add(toolBarPanel);
+            fullPanel.add(boardPanel);
+
+            boardFrame.setContentPane(fullPanel);
             boardFrame.setTitle("Snow Game");
-            boardFrame.setSize(800, 640);
+            boardFrame.setSize(800, 800);
             boardFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             boardFrame.setVisible(true);
         }
@@ -159,132 +205,141 @@ public class GameBoard implements ActionListener
     //listeners for the squares on the screen
     public void actionPerformed(ActionEvent e)
     {
-        //the only things you can press in gameboard are the gamesquares so shouldnt ever break
-        GameSquare clickedSquare = (GameSquare) e.getSource();
-
-        System.out.println(clickedSquare.getCords()[0] + " " + clickedSquare.getCords()[1]);
-        System.out.println(clickedSquare.getName());
-
-        if (clickedSquare.canBeSelected(this))
+        if (e.getSource() == resetButton)
         {
-            Boolean arrowClicked = false;
-            //need to check if arrow has been clicked
-            if (clickedSquare.getName().endsWith("_arrow"))
+            new GameBoard(false, originalArray, levelNumber);
+            boardFrame.dispose();
+        }
+        else
+        {
+        
+            //the only things you can press in gameboard are the gamesquares so shouldnt ever break
+            GameSquare clickedSquare = (GameSquare) e.getSource();
+        
+            if (clickedSquare.getSelectedBoolean())
             {
-                arrowClicked = true;
+                clickedSquare.setSelected(false);
             }
-            
-            System.out.println(clickedSquare.getName());
 
-            //move
-            if (arrowClicked)
+            if (clickedSquare.canBeSelected(this))
             {
-                System.out.println("square moving " + clickedSquare.getName());
+                Boolean arrowClicked = false;
+                //need to check if arrow has been clicked
+                if (clickedSquare.getName().endsWith("_arrow"))
+                {
+                    arrowClicked = true;
+                }
+                
+                System.out.println(clickedSquare.getName());
+
+                //move
+                if (arrowClicked)
+                {
+                    System.out.println("square moving " + clickedSquare.getName());
+                    for (int i = 0; i < gameBoardHeight; i++)
+                    {
+                        for (int j = 0; j < gameBoardWidth; j++)
+                        {
+                            squaresArray[i][j].setStackable(false);
+                            squaresArray[i][j].deSelect();
+                        }
+                    }
+                    //what direction to move
+                    if (clickedSquare.getName().startsWith("up"))
+                    {
+                        //go below the up arrow to get the square to  be moved
+                        squaresArray[clickedSquare.getCords()[1] + 1][clickedSquare.getCords()[0]].gameMove("up", this);
+                    }
+                    else if (clickedSquare.getName().startsWith("down"))
+                    {
+                        //go above the down arrow to get the square to  be moved
+                        squaresArray[clickedSquare.getCords()[1] - 1][clickedSquare.getCords()[0]].gameMove("down", this);
+                    }
+                    else if (clickedSquare.getName().startsWith("left"))
+                    {
+                        //go to the right the left arrow to get the square to  be moved
+                        squaresArray[clickedSquare.getCords()[1]][clickedSquare.getCords()[0] + 1].gameMove("left", this);
+                    }
+                    else if (clickedSquare.getName().startsWith("right"))
+                    {
+                        //go to the left the right arrow to get the square to  be moved
+                        squaresArray[clickedSquare.getCords()[1]][clickedSquare.getCords()[0] - 1].gameMove("right", this);
+                    }
+                }
+
+                if (clickedSquare.getName().startsWith("head_"))
+                {
+                    GameSquare[] adjacentSquaresHead = checkAdjacentSquares(clickedSquare);
+                    for (int i = 0; i < 4; i++)
+                    {
+                        if (adjacentSquaresHead[i] != null)
+                        {
+                            if (adjacentSquaresHead[i].getName().equals("snowball_stack"))
+                            {
+                                clickedSquare.setStackable(true);
+                            }
+                        }
+                    }
+                }
+
+                System.out.println(clickedSquare.isStackable());
+                //stack the snowballs if stackable
+                if (clickedSquare.isStackable())
+                {
+                    GameSquare[] adjacentSquares = checkAdjacentSquares(clickedSquare);
+                    System.out.println("Stackable");
+
+                    //find the square next to the current one that is getting stacked
+                    for (int i = 0; i < adjacentSquares.length; i++)
+                    {
+                        if (adjacentSquares[i] != null)
+                        {
+                            if (adjacentSquares[i].isStackable() && (!adjacentSquares[i].getName().startsWith("head_") || clickedSquare.getName().equals("snowman_stack")))
+                            {
+                                clickedSquare.stack(adjacentSquares[i]);
+                                clickedSquare.setStackable(false);
+                                adjacentSquares[i].setStackable(false);
+                                clickedSquare.deSelect();
+                            }
+                        
+                        }
+                    }
+                }
+                
+                //deSelects everything selected on board before selecting new item
+                //also now going to make it get rid of existing arrows
                 for (int i = 0; i < gameBoardHeight; i++)
                 {
                     for (int j = 0; j < gameBoardWidth; j++)
                     {
-                        squaresArray[i][j].setStackable(false);
-                        squaresArray[i][j].deSelect();
-                    }
-                }
-                //what direction to move
-                if (clickedSquare.getName().startsWith("up"))
-                {
-                    //go below the up arrow to get the square to  be moved
-                    squaresArray[clickedSquare.getCords()[1] + 1][clickedSquare.getCords()[0]].gameMove("up", this);
-                }
-                else if (clickedSquare.getName().startsWith("down"))
-                {
-                    //go above the down arrow to get the square to  be moved
-                    squaresArray[clickedSquare.getCords()[1] - 1][clickedSquare.getCords()[0]].gameMove("down", this);
-                }
-                else if (clickedSquare.getName().startsWith("left"))
-                {
-                    //go to the right the left arrow to get the square to  be moved
-                    squaresArray[clickedSquare.getCords()[1]][clickedSquare.getCords()[0] + 1].gameMove("left", this);
-                }
-                else if (clickedSquare.getName().startsWith("right"))
-                {
-                    //go to the left the right arrow to get the square to  be moved
-                    squaresArray[clickedSquare.getCords()[1]][clickedSquare.getCords()[0] - 1].gameMove("right", this);
-                }
-            }
-
-            if (clickedSquare.getName().startsWith("head_"))
-            {
-                GameSquare[] adjacentSquaresHead = checkAdjacentSquares(clickedSquare);
-                for (int i = 0; i < 4; i++)
-                {
-                    if (adjacentSquaresHead[i] != null)
-                    {
-                        if (adjacentSquaresHead[i].getName().equals("snowball_stack"))
+                        if (squaresArray[i][j].getSelectedBoolean())
                         {
-                            clickedSquare.setStackable(true);
+                            squaresArray[i][j].deSelect();
+                        }
+
+                        if (squaresArray[i][j].getName().endsWith("_arrow"))
+                        {
+                            ImageIcon holeIcon = new ImageIcon("hole.png");
+                            squaresArray[i][j].setIcon(holeIcon);
+                            squaresArray[i][j].setName("hole");
                         }
                     }
                 }
-            }
 
-            System.out.println(clickedSquare.isStackable());
-            //stack the snowballs if stackable
-            if (clickedSquare.isStackable())
-            {
-                GameSquare[] adjacentSquares = checkAdjacentSquares(clickedSquare);
-                System.out.println("Stackable");
-
-                //find the square next to the current one that is getting stacked
-                for (int i = 0; i < adjacentSquares.length; i++)
+                //only snowballs can prompt an action
+                if (clickedSquare.getName().startsWith("snowball_") || clickedSquare.getName().startsWith("head_"))
                 {
-                    if (adjacentSquares[i] != null)
-                    {
-                        if (adjacentSquares[i].isStackable() && (!adjacentSquares[i].getName().startsWith("head_") || clickedSquare.getName().equals("snowman_stack")))
-                        {
-                            clickedSquare.stack(adjacentSquares[i]);
-                            clickedSquare.setStackable(false);
-                            adjacentSquares[i].setStackable(false);
-                            clickedSquare.deSelect();
-                        }
-                       
-                    }
-                    
+                    clickedSquare.selected();
+                    promptAction(clickedSquare);
                 }
             }
             
-            //deSelects everything selected on board before selecting new item
-            //also now going to make it get rid of existing arrows
-            for (int i = 0; i < gameBoardHeight; i++)
+            if (checkWin())
             {
-                for (int j = 0; j < gameBoardWidth; j++)
-                {
-                    if (squaresArray[i][j].getSelectedBoolean())
-                    {
-                        squaresArray[i][j].deSelect();
-                    }
-
-                    if (squaresArray[i][j].getName().endsWith("_arrow"))
-                    {
-                        ImageIcon holeIcon = new ImageIcon("hole.png");
-                        squaresArray[i][j].setIcon(holeIcon);
-                        squaresArray[i][j].setName("hole");
-                    }
-                }
-            }
-
-            //only snowballs can prompt an action
-            if (clickedSquare.getName().startsWith("snowball_") || clickedSquare.getName().startsWith("head_"))
-            {
-                clickedSquare.selected();
-                promptAction(clickedSquare);
+                new GameWinScreen(levelNumber);
+                boardFrame.dispose();
             }
         }
-        
-        if (checkWin())
-        {
-            new GameWinScreen(levelNumber);
-            boardFrame.dispose();
-        }
-
 
     }
 
