@@ -5,6 +5,7 @@ import javax.swing.*;
 
 public class GameWinScreen implements ActionListener
 {
+    //need the levelnumber for going back to the menu
     private int lastLevelNumber;
 
     private JFrame gameWinFrame = new JFrame();
@@ -24,7 +25,7 @@ public class GameWinScreen implements ActionListener
         gameWinPanel.add("Center", mainMenuButton);
         mainMenuButton.addActionListener(this);
        
-
+        //smaller frame for win screen
         gameWinFrame.setContentPane(gameWinPanel);
         gameWinFrame.setTitle("Game Over!");
         gameWinFrame.setSize(300, 300);
@@ -34,6 +35,7 @@ public class GameWinScreen implements ActionListener
 
     public void actionPerformed(ActionEvent e)
     {
+        //go back to the main menu on the last level that was played
         if (e.getSource() == mainMenuButton)
         {
             new Menu(this.lastLevelNumber);

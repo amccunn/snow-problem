@@ -5,14 +5,20 @@ public class GameSquare extends JButton
 {
     private Boolean readyToStack;
     private Boolean selectedBoolean;
+
+    //define the type of square with a name 
+    //and define the location with respect to the grid 
     private String squareName;
     private int xCord;
     private int yCord;
 
     public GameSquare(String name, int x, int y)
     {
+        //creates the square with the image of its name
         ImageIcon imageName = new ImageIcon(name + ".png");
         super(imageName);
+
+        //sets attributes to base values
         this.squareName = name;
         this.xCord = x;
         this.yCord = y;
@@ -30,6 +36,8 @@ public class GameSquare extends JButton
         this.readyToStack = stack;
     }
 
+    //checks whether the square can be selected only snowballs and arrows can be selected
+    //and in some cases the heads can be selected
     public Boolean canBeSelected(GameBoard theGameBoard)
     {
         //snowball and arrows prompt action when selected but a stack doesnt can only be selected when a head was selected before it
@@ -42,6 +50,7 @@ public class GameSquare extends JButton
         {
             GameSquare[] squares = theGameBoard.checkAdjacentSquares(this);
     
+            //check adjacent squares for a stack
             for (int i = 0; i < squares.length; i++)
             {
                 if (squares[i] != null)
@@ -60,6 +69,7 @@ public class GameSquare extends JButton
         }
     }
 
+    //lets you see what square you have selected with a border
     public void selected()
     {
         this.setBorder(BorderFactory.createLineBorder(Color.RED, 3));
@@ -99,7 +109,7 @@ public class GameSquare extends JButton
         this.yCord = y;
     }
 
-
+    //swaps the current square and target square
     public void swap(GameSquare target, GameBoard board)
     {
         //change the icons 
@@ -116,9 +126,9 @@ public class GameSquare extends JButton
 
     }
 
+    //this object is the bottom of the stack the topStack is the top
     public void stack(GameSquare topStack)
     {
-        System.out.println("Stacking...");
         if (this.getName().startsWith("snowball_"))
         {
             ImageIcon stackIcon = new ImageIcon("snowman_stack.png");
@@ -127,10 +137,8 @@ public class GameSquare extends JButton
         }
         else
         {
-            System.out.println(topStack.getName());            
+            //in the else means its a head so it colour determines the snowman colour
             String colour = topStack.getName().split("_")[1];
-            System.out.println(colour);
-
 
             ImageIcon stackIcon = new ImageIcon("snowman_" + colour + ".png");
             this.setIcon(stackIcon);
@@ -143,66 +151,65 @@ public class GameSquare extends JButton
         
     }
 
+    //moves in the given direction
     public void gameMove(String direction, GameBoard board)
     {
         int[] cords = new int[2];
         if (direction.equals("up"))
         {
+            //goes through all squares up can looks for objects
             for (int i = this.yCord - 1; i >= 0; i--)
             {
+                //holes and arrows cant be collided with
                 if (!board.getSquaresArray()[i][this.xCord].getName().equals("hole") && !board.getSquaresArray()[i][this.xCord].getName().endsWith("_arrow"))
                 {
                     cords[0] = this.xCord;
                     cords[1] =  i + 1;
                     break;
                 }
+                //if it doesnt collide with anything fall off and die
                 else if (i == 0)
                 {
-                    System.out.println("Fall off map");
                     new GameOverScreen(board.getLevelNumber());
                     board.getFrame().dispose();
                 }
-                System.out.println(i);
             }
         }
         else if (direction.equals("down"))
         {
-            System.out.println("Going down");
-
+            //goes through all squares down can looks for objects
             for (int i = this.yCord + 1; i <= 3; i++)
             {
+                //holes and arrows cant be collided with
                 if (!board.getSquaresArray()[i][this.xCord].getName().equals("hole") && !board.getSquaresArray()[i][this.xCord].getName().endsWith("_arrow"))
                 {
-                    System.out.println("No hole " + i);
                     cords[0] = this.xCord;
                     cords[1] =  i - 1;
                     break;
                 }
+                //if it doesnt collide with anything fall off and die
                 else if (i == 3)
                 {
-                    System.out.println("Fall off map");
                     new GameOverScreen(board.getLevelNumber());
                     board.getFrame().dispose();
                 }
-                System.out.println(i + " " + board.getSquaresArray()[i][this.xCord].getName());
             }
         }
         else if (direction.equals("right"))
         {
-            System.out.println("Going right");
-
+            //goes through all squares right can looks for objects
             for (int i = this.xCord + 1; i <= 4; i++)
             {
+                //holes and arrows cant be collided with
                 if (!board.getSquaresArray()[this.yCord][i].getName().equals("hole") && !board.getSquaresArray()[this.yCord][i].getName().endsWith("_arrow"))
                 {
-                    System.out.println("No hole " + i);
                     cords[0] = i - 1;
                     cords[1] =  this.yCord;
                     break;
                 }
+                //if it doesnt collide with anything fall off and die
                 else if (i == 4)
                 {
-                    System.out.println("Fall off map");
                     new GameOverScreen(board.getLevelNumber());
                     board.getFrame().dispose();
                 }
@@ -211,27 +218,25 @@ public class GameSquare extends JButton
         }
         else if (direction.equals("left"))
         {
-            System.out.println("Going left");
-
+            //go through all squares left and looks for objects 
             for (int i = this.xCord - 1; i >= 0; i--)
             {
+                //holes and arrows cant be collided with
                 if (!board.getSquaresArray()[this.yCord][i].getName().equals("hole") && !board.getSquaresArray()[this.yCord][i].getName().endsWith("_arrow"))
                 {
-                    System.out.println("No hole " + i);
                     cords[0] = i + 1;
                     cords[1] =  this.yCord;
                     break;
                 }
+                //if it doesnt collide with anything fall off and die
                 else if (i == 0)
                 {
-                    System.out.println("Fall off map");
                     new GameOverScreen(board.getLevelNumber());
                     board.getFrame().dispose();
                 }
-                System.out.println(i);
             }
         }
-        System.out.println(cords[0] + " " + cords[1]);
+        //after locations have been got swap them
         this.swap(board.getSquaresArray()[cords[1]][cords[0]], board);
     }
 }
