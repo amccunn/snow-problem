@@ -15,8 +15,7 @@ public class GameSquare extends JButton
     public GameSquare(String name, int x, int y)
     {
         //creates the square with the image of its name
-        ImageIcon imageName = new ImageIcon(name + ".png");
-        super(imageName);
+        super(new ImageIcon(name + ".png"));
 
         //sets attributes to base values
         this.squareName = name;
